@@ -29,7 +29,7 @@ Tarefas:
 
 \_\_\_MAPA
 
-- usando o leaftlet e o react-leaft-let, fazer um mapa com a localizacao do Senai.
+- [X] usando o leaftlet e o react-leaft-let, fazer um mapa com a localizacao do Senai.
 
 import 'leaflet/dist/leaflet.css';
 

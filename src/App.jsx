@@ -5,12 +5,42 @@ import produtos from './constants/produtos.json'
 import { api } from "./api/rmApi"
 import style from './App.module.css'
 
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
+import "leaflet-defaulticon-compatibility";
+
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+
+import { Modal, Button, Box, Typography } from '@mui/material';
+import { BasicModal } from './components/BasicModal';
+
+function MapWithPlaceholder() {
+  return (
+    <MapContainer
+      center={[-25.425017993503214, -49.27230300000001]}
+      zoom={200}
+      scrollWheelZoom={false}
+      style={{ height: "80vh", width: "90vw" }}
+    >
+      <TileLayer
+        noWrap={true}
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={[-25.425017993503214, -49.27230300000001]}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </MapContainer>
+  )
+}
+
 function App() {
   const [show, setShow] = useState("")
   const [data, setData] = useState([])
   const [page, setPage] = useState("")
   const [name, setName] = useState("")
-
 
   useEffect(() => {
     api.get(`/character/?page=${page}&name=${name}`).then((response) => {
@@ -41,7 +71,7 @@ function App() {
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {produtos.map((item) => {
                 return (
-                  <Card name={item.name} desc={item.desc} value={item.value} image={item.image} key={item.id} status={item.status}/>
+                  <Card name={item.name} desc={item.desc} value={item.value} image={item.image} key={item.id} status={item.status} />
                 )
               })}
             </div>
@@ -50,16 +80,17 @@ function App() {
         {show === "api" &&
           <>
             <h2>Rick and Morty API</h2>
+            
             <div>
-              <input className={style.filterInput} type="text" placeholder=" 1/43" value={page} onChange={(event) => setPage(event.target.value)}/>
-              <input className={style.filterInput} type="text" placeholder=" name" value={name} onChange={(event) => setName(event.target.value)}/>
+              <input className={style.filterInput} type="text" placeholder=" 1/43" value={page} onChange={(event) => setPage(event.target.value)} />
+              <input className={style.filterInput} type="text" placeholder=" name" value={name} onChange={(event) => setName(event.target.value)} />
             </div>
-            <div style={{display: "flex", flexWrap: "wrap"}}>
-              {data.map((item) => {
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {data.map((item, index) => {
                 return (
-                  <div key={item.id}>
-                    <CardApi name={item.name} species={item.species} image={item.image} status={item.status} type={item.type} gender={item.gender}/>
-                    {/* <button onClick={() => {}}>Info</button> */}
+                  <div key={index}>
+                    <CardApi name={item.name} species={item.species} image={item.image} status={item.status} type={item.type} gender={item.gender} />
+                    <BasicModal index={index}/>
                   </div>
                 )
               })}
@@ -69,8 +100,8 @@ function App() {
         {show === "map" &&
           <>
             <h2>Mapa</h2>
-            <div>
-              mapa aqui
+            <div style={{ width: "100vw", display: "flex", justifyContent: "center" }}>
+              <MapWithPlaceholder />
             </div>
           </>
         }
