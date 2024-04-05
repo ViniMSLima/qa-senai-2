@@ -14,6 +14,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Modal, Button, Box, Typography } from '@mui/material';
 import { BasicModal } from './components/BasicModal';
 
+import Draggable from 'react-draggable';
+
 function MapWithPlaceholder() {
   return (
     <MapContainer
@@ -80,7 +82,7 @@ function App() {
         {show === "api" &&
           <>
             <h2>Rick and Morty API</h2>
-            
+
             <div>
               <input className={style.filterInput} type="text" placeholder=" 1/43" value={page} onChange={(event) => setPage(event.target.value)} />
               <input className={style.filterInput} type="text" placeholder=" name" value={name} onChange={(event) => setName(event.target.value)} />
@@ -88,10 +90,12 @@ function App() {
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {data.map((item, index) => {
                 return (
-                  <div key={index}>
-                    <CardApi name={item.name} species={item.species} image={item.image} status={item.status} type={item.type} gender={item.gender} />
-                    <BasicModal index={index}/>
-                  </div>
+                  <Draggable>
+                    <div key={index} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                      <CardApi name={item.name} species={item.species} image={item.image} status={item.status} type={item.type} gender={item.gender} />
+                      <BasicModal index={index} item={item} />
+                    </div>
+                  </Draggable>
                 )
               })}
             </div>
